@@ -1,0 +1,5 @@
+pynacl==1.2.1
+discord.py==1.5.1
+pip
+colorlog
+cffi --only-binary all; sys_platform == 'win32'

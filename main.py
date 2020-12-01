@@ -1,8 +1,17 @@
-import asyncio, discord, dkd
+import asyncio, discord, dkd, configparser
 from discord.ext import commands
 
+
+
+#ini 파일에서 봇에관한 정보 읽어오기
+config = configparser.ConfigParser()
+config.read('bot_config.ini')
+default = config['DEFAULT']
+
+
+
 #봇의 설정
-token = "NjkxNDU1OTc3MjcwMTQ5MTcx.XngOjw.21r5BXnqWbIdWhx6L31AoMP030c" #봇 토큰값 지정
+token = default('bot_token') #봇 토큰값 지정
 game = discord.Game("Dizzzzzt") #디스코드 내 봇 상태메세지 설정
 bot = commands.Bot(command_prefix='//',status=discord.Status.online,activity=game) #전칭어 설정
 
@@ -30,4 +39,3 @@ async def greeting(ctx):
 
 #봇 시작
 bot.run(token)
-

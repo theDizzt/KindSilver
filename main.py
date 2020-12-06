@@ -22,13 +22,13 @@ import json
 #봇 설정하기 / Bot Setting
 
 #discord bot tokken
-token = 'NjkxNDU1OTc3MjcwMTQ5MTcx.XngOjw.CQR5gmrheTpMXaWCuRAv-CubsIs'
+token = ''
 
 #네이버 API 클라이언트 아이디 / Naver Open API application ID
-client_id = "wFjryhIZbvIIsCzIoUFi"
+client_id = ""
 
 #네이버 API 숨겨진 클라이언트 아이디 / Naver Open API application token
-client_secret = "sM42fH43Rz"
+client_secret = ""
 
 #오류메세지 설정
 error_text = ":question: You didn't enter a sentence... Can you check it again??"

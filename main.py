@@ -30,6 +30,9 @@ client_id = ""
 #네이버 API 숨겨진 클라이언트 아이디 / Naver Open API application token
 client_secret = ""
 
+#상태메세지 설정
+game_mes = "Type '/help' for help"
+
 #오류메세지 설정
 error_text = ":question: You didn't enter a sentence... Can you check it again??"
 
@@ -56,12 +59,12 @@ error_0 = ":negative_squared_cross_mark: Translate Failed : HTTPError Occured...
 client = discord.Client()
 @client.event # Use these decorator to register an event.
 async def on_ready(): # on_ready() event : when the bot has finised logging in and setting things up
-    await client.change_presence(status=discord.Status.online, activity=discord.Game("Type /help or /도움말 for help"))
+    await client.change_presence(status=discord.Status.online, activity=discord.Game(game_mes))
     print("New log in as {0.user}".format(client))
 
 
 
-#자동 응답 테스트 / Auto-reply Test
+#번역 명령어
     
 @client.event
 
@@ -108,6 +111,19 @@ async def on_message(message): # on_message() event : when the bot has recieved 
     else:
         print("Error Code : " + responsedCode)
     '''
+
+
+
+#도움말
+
+    if message.content.startswith("/help"):
+        #최종 결과 임베드 타입으로 출력
+        embed = discord.Embed(title=":regional_indicator_h: :regional_indicator_e: :regional_indicator_l: :regional_indicator_p:", description="*이 디스코드 봇을 사용하기 위한 설명서*", color=0x009900)
+        embed.add_field(name="도움말", value="`/help`를 통해 도움말 페이지를 열 수 있습니다.", inline=False)
+        embed.add_field(name="한국어 :left_right_arrow: 영어", value="`/k2e <text>`를 통해 한국어를 영어로, `/k2e <text>`를 통해 영어를 한국어로 번역할 수 있습니다.", inline=False)
+        embed.set_thumbnail(url=thumb_url)
+        embed.set_footer(text=under_text, icon_url=under_icon_url)
+        await message.channel.send(embed=embed)
 
 
 
@@ -160,7 +176,7 @@ async def on_message(message): # on_message() event : when the bot has recieved 
                     
                     #최종 결과 임베드 타입으로 출력
                     translatedText = api_callResult['message']['result']["translatedText"]
-                    embed = discord.Embed(title="Korean -> English", description="", color=0x009900)
+                    embed = discord.Embed(title="Korean :arrow_right: English", description="", color=0x009900)
                     embed.add_field(name="Before", value=savedCombineword, inline=False)
                     embed.add_field(name="After", value=translatedText, inline=False)
                     embed.set_thumbnail(url=thumb_url)
@@ -226,7 +242,7 @@ async def on_message(message): # on_message() event : when the bot has recieved 
                     
                     #최종 결과 임베드 타입으로 출력
                     translatedText = api_callResult['message']['result']["translatedText"]
-                    embed = discord.Embed(title="English -> Korean", description="", color=0x009900)
+                    embed = discord.Embed(title="English :arrow_right: Korean", description="", color=0x009900)
                     embed.add_field(name="Before", value=savedCombineword, inline=False)
                     embed.add_field(name="After", value=translatedText, inline=False)
                     embed.set_thumbnail(url=thumb_url)

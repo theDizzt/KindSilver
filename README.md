@@ -1,6 +1,4 @@
-###말 잘 듣는 최은비 (Kind Silver)
-
-
+<img url="https://media.discordapp.net/attachments/771616456931803187/785850120369340446/export.png?width=683&height=670">
 
 
 ▶ 프로젝트 기여자

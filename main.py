@@ -16,6 +16,8 @@ import warnings
 import requests #개별로 설치해야 사용가능함
 import unicodedata
 import json
+import random
+from time import sleep
 
 
 
@@ -114,6 +116,20 @@ async def on_message(message): # on_message() event : when the bot has recieved 
 
 
 
+#주사위 기능
+
+    if message.content.startswith("/주사위"):
+        trsText = message.content.split(" ")
+        tempInt = ''
+        for digit in trsText[1:]:
+            tempInt += digit
+        
+        if int(tempInt) >= 1:
+            dice = random.randrange(1, int(tempInt))
+            await message.channel.send("1부터 {}까지 자연수중 내가 고른 수는 **{}**!".format(int(tempInt), dice))
+
+
+
 #도움말
 
     if message.content.startswith("/help"):
@@ -146,7 +162,7 @@ async def on_message(message): # on_message() event : when the bot has recieved 
     if message.content.startswith("/e help"):
         #최종 결과 임베드 타입으로 출력
         embed = discord.Embed(title=":regional_indicator_h: :regional_indicator_e: :regional_indicator_l: :regional_indicator_p:", description="*Instructions for using this Discord Bot*", color=0x009900)
-        embed.add_field(name="도움말", value="`/help`를 통해 도움말 페이지를 열 수 있습니다.", inline=False)
+        embed.add_field(name="Help", value="You can open the help page via `/help`.", inline=False)
         embed.add_field(name="Korean :left_right_arrow: English", value="You can translate Korean to English through `/k2e <text>` and English to Korean through `/e2k <text>`.", inline=False)
         embed.add_field(name="Korean :left_right_arrow: Simplified Chinese", value="You can translate Korean to Chinese through `/k2c <text>` and Chinese to Korean through `/c2k <text>`.", inline=False)
         embed.add_field(name="English :left_right_arrow: Simplified Chinese", value="You can translate English to Chinese with `/e2c <text>` and Chinese to English with `/c2e <text>`.", inline=False)
@@ -160,7 +176,7 @@ async def on_message(message): # on_message() event : when the bot has recieved 
     if message.content.startswith("/c help"):
         #최종 결과 임베드 타입으로 출력
         embed = discord.Embed(title=":regional_indicator_h: :regional_indicator_e: :regional_indicator_l: :regional_indicator_p:", description="*使用该Discord Bot的说明*", color=0x009900)
-        embed.add_field(name="도움말", value="`/help`를 통해 도움말 페이지를 열 수 있습니다.", inline=False)
+        embed.add_field(name="救命", value="您可以通过`/ help`打开帮助页面。", inline=False)
         embed.add_field(name="韩语 :left_right_arrow: 英语", value="您可以通过`/k2e <text>`将韩语翻译为英语，并通过`/e2k <text>`将英语翻译为韩语。", inline=False)
         embed.add_field(name="韩语 :left_right_arrow: 简体中文", value="您可以通过`/ k2c <text>`将韩语翻译成中文，并通过`/ c2k <text>`将汉语译成韩语。", inline=False)
         embed.add_field(name="英语 :left_right_arrow: 简体中文", value="您可以使用`/e2c <text>`将英语翻译为中文，使用`/c2e <text>`将英语翻译为中文。", inline=False)

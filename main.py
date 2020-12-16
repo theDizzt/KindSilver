@@ -1,6 +1,7 @@
 #사용할 모듈 불러오기 / Import Modules
 
 import discord
+from discord.ext import commands
 import asyncio
 import os
 from discord.ext import commands
@@ -56,6 +57,93 @@ error_0 = ":negative_squared_cross_mark: Translate Failed : HTTPError Occured...
 
 
 
+#데이터 폴더 생성
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except OSError:
+        print ('Error: Creating directory. ' +  directory)
+ 
+createFolder('./data')
+
+
+
+#데이터 저장함수
+
+def dataRead(user_id):
+    file = open("./data/data" + str(user_id) + ".txt","r+")
+    if file != None:
+        return file.read()
+    else:
+        return 0
+    file.close()
+
+def dataWrite(user_id, value):
+    file = open("./data/data" + str(user_id) + ".txt","w+")
+    if file == None:
+        file.write("1_0")
+    file.write(value)
+    file.close()
+
+
+
+#레벨 함수
+def level(exp):
+    i = 1
+    while(1):
+        if exp < int(((i * (i+1))/2)*100):
+            break
+        else:
+            i += 1
+    return i
+
+def level_show(exp):
+    i = 1
+    
+    if exp < 31960000:
+        while(1):
+            if exp < int(((i * (i+1))/2)*100):
+                break
+            else:
+                i += 1
+        return str(i)
+    else:
+        return "800(MAX)"
+
+def need_exp(i):
+    return int(((i * (i+1))/2)*100)
+
+def level_up(temp, pres):
+    if need_exp(temp) < pres:
+        return True
+    else:
+        return False
+
+def process_bar(ratio):
+    cons = int(ratio//0.05)
+    str_process = "▶" * cons + "▷" * (20 - cons)
+    return str_process
+
+
+
+#랭킹파일 저장
+
+def rankList():
+
+    path = "./data"
+    file_list = os.listdir(path)
+
+    rank_list = []
+
+    for a in file_list:
+        user_id = int(((a.split("data"))[1]).split(".txt")[0])
+        rank_list.append(user_id)
+
+    return rank_list
+
+
+        
 #디스코드 봇 객체 생성 / Create Discord Bot Object
 
 client = discord.Client()
@@ -73,10 +161,22 @@ async def on_ready(): # on_ready() event : when the bot has finised logging in a
 async def on_message(message): # on_message() event : when the bot has recieved a message
     #To user who sent message
     # await message.author.send(msg)
+
+    #경험치 주는 기능
     print(message.content)
+    try:
+        temp_lv = level(int(dataRead(message.author.id)))
+        dataWrite(message.author.id, str(int(dataRead(message.author.id)) + len(message.content)))
+        if level_up(temp_lv, int(dataRead(message.author.id))):
+            await message.channel.send(":confetti_ball: 축하합니다! **"+str(message.author)+"**은(는) **[레벨 "+level_show(int(dataRead(message.author.id)))+"]** 이(가) 되었습니다!!!")
+
+    except:
+        dataWrite(message.author.id, str(len(message.content)))
+        if len(message.content) >= 100:
+            await message.channel.send(":confetti_ball: 축하합니다! **"+str(message.author)+"**은(는) **[레벨 "+level_show(int(dataRead(message.author.id)))+"]** 이(가) 되었습니다!!!")
 
 
-
+    
     if message.author == client.user:
         return
 
@@ -116,9 +216,15 @@ async def on_message(message): # on_message() event : when the bot has recieved 
 
 
 
+#테스트 코드
+    if message.content.startswith("은비"):
+        await message.channel.send("왜 불러?", tts=True)
+
+
+
 #주사위 기능
 
-    if message.content.startswith("/주사위"):
+    if message.content.startswith("/dice"):
         trsText = message.content.split(" ")
         tempInt = ''
         for digit in trsText[1:]:
@@ -130,16 +236,47 @@ async def on_message(message): # on_message() event : when the bot has recieved 
 
 
 
+#레벨 확인
+    if message.content.startswith("/level"):
+        temp = level(int(dataRead(message.author.id)))
+        temp_a = int(dataRead(message.author.id)) - need_exp(temp-1)
+        temp_b = need_exp(temp) - need_exp(temp-1)
+        #최종 결과 임베드 타입으로 출력
+        embed = discord.Embed(title="**"+str(message.author)+"**", description="", color=0x009900)
+        embed.add_field(name="레벨 (Level)", value=level_show(int(dataRead(message.author.id))), inline=False)
+        embed.add_field(name="경험치 (Xp)", value="{}/{} ({}%)\n*{}*  `{}` *{}*".format(temp_a, temp_b, round((100*temp_a/temp_b),2), temp, process_bar(temp_a/temp_b),temp+1), inline=False)
+        embed.add_field(name="총 경험치 (Total Xp)", value=dataRead(message.author.id), inline=False)
+        embed.set_thumbnail(url=message.author.avatar_url)
+        embed.set_footer(text="Level Bot provided by Dizzt", icon_url=thumb_url)
+        await message.channel.send(":green_circle: Import *" + str(message.author) + "* 's Data")
+        await message.channel.send(embed=embed)
+
+
+
+#랭킹확인
+    if message.content.startswith("/목록"):
+        await message.channel.send("출력을 시작합니다!")
+        for user_id in rankList():
+            user = await client.fetch_user(user_id)
+            if int(dataRead(user_id)) < 31960000:
+                await message.channel.send("**{}** | `{} / 800` | `{} / 31960000`".format(user, level(int(dataRead(user_id))), dataRead(user_id)))
+            else:
+                await message.channel.send("**{}** | `800 (MAX)` | `800 레벨 달성을 축하드립니다!`".format(user))
+        await message.channel.send("출력이 끝났습니다!")
+
+
+
 #도움말
 
     if message.content.startswith("/help"):
         #최종 결과 임베드 타입으로 출력
-        embed = discord.Embed(title="**언어를 골라주세요!**", description="*언어를 골라주세요!*", color=0x009900)
+        embed = discord.Embed(title="**언어를 골라주세요!**", description="*Please choose a language!*", color=0x009900)
         embed.add_field(name="/k help", value="한국어로 적힌 도움말을 볼 수 있습니다.", inline=False)
         embed.add_field(name="/e help", value="Help is available in English.", inline=False)
         embed.add_field(name="/c help", value="您可以获得中文的帮助。", inline=False)
         embed.set_thumbnail(url=thumb_url)
-        embed.set_footer(text=under_text, icon_url=under_icon_url)
+        embed.set_footer(text=under_text, icon_url=thumb_url)
+        await message.channel.send(":green_circle: 원하는 정보가 있다면 여기에서 살펴 볼 수 있습니다!")
         await message.channel.send(embed=embed)
 
 
@@ -152,8 +289,10 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         embed.add_field(name="한국어 :left_right_arrow: 영어", value="`/k2e <text>`를 통해 한국어를 영어로, `/e2k <text>`를 통해 영어를 한국어로 번역할 수 있습니다.", inline=False)
         embed.add_field(name="한국어 :left_right_arrow: 영어", value="`/k2c <text>`를 통해 한국어를 중국어로, `/c2k <text>`를 통해 중국어를 한국어로 번역할 수 있습니다.", inline=False)
         embed.add_field(name="한국어 :left_right_arrow: 영어", value="`/e2c <text>`를 통해 영어를 중어로, `/c2e <text>`를 통해 중국어를 영어로 번역할 수 있습니다.", inline=False)
+        embed.add_field(name="기타기능", value="`/dice <int>` 1 ~ <int>까지의 랜덤 자연수 하나를 골라줍니다!\n`/level` 채팅기록을 바탕으로 얻은 자신의 경험치를 확인할 수 있습니다.", inline=False)
         embed.set_thumbnail(url=thumb_url)
-        embed.set_footer(text=under_text, icon_url=under_icon_url)
+        embed.set_footer(text="Kind Sliver's birthday is November 19th!", icon_url=thumb_url)
+        await message.channel.send(":green_circle: 한국어 설명서 준비완료!")
         await message.channel.send(embed=embed)
 
 
@@ -166,8 +305,10 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         embed.add_field(name="Korean :left_right_arrow: English", value="You can translate Korean to English through `/k2e <text>` and English to Korean through `/e2k <text>`.", inline=False)
         embed.add_field(name="Korean :left_right_arrow: Simplified Chinese", value="You can translate Korean to Chinese through `/k2c <text>` and Chinese to Korean through `/c2k <text>`.", inline=False)
         embed.add_field(name="English :left_right_arrow: Simplified Chinese", value="You can translate English to Chinese with `/e2c <text>` and Chinese to English with `/c2e <text>`.", inline=False)
+        embed.add_field(name="Other functions", value="`/dice <int>` Pick a random natural number from 1 to <int>!\n`/level` You can check your own experience based on the chat history.", inline=False)
         embed.set_thumbnail(url=thumb_url)
-        embed.set_footer(text=under_text, icon_url=under_icon_url)
+        embed.set_footer(text="Kind Sliver's birthday is November 19th!", icon_url=thumb_url)
+        await message.channel.send(":green_circle: English manual is ready!")
         await message.channel.send(embed=embed)
 
 
@@ -180,8 +321,10 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         embed.add_field(name="韩语 :left_right_arrow: 英语", value="您可以通过`/k2e <text>`将韩语翻译为英语，并通过`/e2k <text>`将英语翻译为韩语。", inline=False)
         embed.add_field(name="韩语 :left_right_arrow: 简体中文", value="您可以通过`/ k2c <text>`将韩语翻译成中文，并通过`/ c2k <text>`将汉语译成韩语。", inline=False)
         embed.add_field(name="英语 :left_right_arrow: 简体中文", value="您可以使用`/e2c <text>`将英语翻译为中文，使用`/c2e <text>`将英语翻译为中文。", inline=False)
+        embed.add_field(name="其他功能", value="`/dice 从1到<int>中选择一个随机自然数！\n`/level` 您可以根据聊天记录检查体验。", inline=False)
         embed.set_thumbnail(url=thumb_url)
-        embed.set_footer(text=under_text, icon_url=under_icon_url)
+        embed.set_footer(text="Kind Sliver's birthday is November 19th!", icon_url=thumb_url)
+        await message.channel.send(":green_circle: 中文手册已经准备好！")
         await message.channel.send(embed=embed)
 
 

@@ -1,4 +1,6 @@
-![ex_말잘듣는 은비](./title.png)
+![ex_말잘듣는 은비](./preview/pre1.png)
+![ex_말잘듣는 은비](./preview/pre2.png)
+
 
 
 ▶ 프로젝트 기여자

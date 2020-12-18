@@ -187,7 +187,9 @@ async def on_message(message): # on_message() event : when the bot has recieved 
         dataWrite(message.author.id, str(len(message.content)))
         if len(message.content) >= 100:
             await message.channel.send(":confetti_ball: 축하합니다! **"+str(message.author)+"**은(는) **[레벨 "+level_show(int(dataRead(message.author.id)))+"]** 이(가) 되었습니다!!!")
-
+  
+# 184, 189는 .format()으로 고치면 더 코드가 간편해 질 것 같습니다
+# await message.channel.send(":confetti_ball: Congratulations! **{}** has just arrived at **[Level {}]** !!!".format(message.author, level_show(int(dataRead(message.author.id))))
 
     
     if message.author == client.user:

@@ -20,8 +20,6 @@ import json
 import random
 from time import sleep
 
-
-
 #봇 설정하기 / Bot Setting
 
 #discord bot tokken
@@ -146,6 +144,10 @@ def rankList():
         
 #디스코드 봇 객체 생성 / Create Discord Bot Object
 
+#bot = commands.Bot(command_prefix='/',help_command=None)
+#bot이 client 기능을 모두 포함하고 있으므로 이를 사용하는 것이 적합, prefix를 사용하면 startswith를 사용할 필요 없음.
+#client를 모두 bot으로 교체할 것
+
 client = discord.Client()
 @client.event # Use these decorator to register an event.
 async def on_ready(): # on_ready() event : when the bot has finised logging in and setting things up
@@ -155,7 +157,18 @@ async def on_ready(): # on_ready() event : when the bot has finised logging in a
 
 
 #번역 명령어
-    
+
+#@bot.command(aliases=["은비"])
+# client.event를 bot.command 적힌 위 커맨드로 변경할 것
+# 함수 on message와 안에 있는 if message.content.startwith를 모조리 없애고 분리해 아래함수처럼 변경할 것
+#async def eunbi(ctx):
+#   await message.channel.send("왜 불러?", tts=True)
+#
+# 함수 translate도 다음과 같이 변경할 것
+#async def translate(ctx, start_language, end_language, *, textbefore):
+# if start_language == "c":
+#   ~~~
+
 @client.event
 
 async def on_message(message): # on_message() event : when the bot has recieved a message

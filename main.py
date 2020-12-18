@@ -83,7 +83,7 @@ def dataWrite(user_id, value):
         file.write("1_0")
     file.write(value)
     file.close()
-
+# 봇이 플레이어로 들어가지 않도록 데이터 저장할때 봇인지 아닌지 판단할 수 있는 조건을 만들면 좋을것 같습니다
 
 
 #레벨 함수
@@ -190,7 +190,7 @@ async def on_message(message): # on_message() event : when the bot has recieved 
   
 # 184, 189는 .format()으로 고치면 더 코드가 간편해 질 것 같습니다
 # await message.channel.send(":confetti_ball: Congratulations! **{}** has just arrived at **[Level {}]** !!!".format(message.author, level_show(int(dataRead(message.author.id))))
-
+# 187에서 봇이 플레이어로 들어가지 않도록 처리해주어야 할 것같습니다
     
     if message.author == client.user:
         return

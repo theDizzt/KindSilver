@@ -29,7 +29,7 @@ import io
 #봇 설정하기 / Bot Setting
 
 #discord bot tokken
-token = 'NjkxNDU1OTc3MjcwMTQ5MTcx.XngOjw.mwWJV0vtUjotp1mwQt0iAqtfo_o'
+token = ''
 
 #상태메세지 설정
 game_mes = "Type '/help' for help"

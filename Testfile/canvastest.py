@@ -14,7 +14,7 @@ import urllib.request
 #봇 설정하기 / Bot Setting
 
 #discord bot token
-token = 'Nzg3NTg5Njk3MTczNTg1OTUy.X9XKEA.ITnBmE4_7WRWz0pUtZToG932-P4'
+token = ''
 
 #상태메세지 설정 / Status message setting
 game_mes = "Prefix = [ascii]"

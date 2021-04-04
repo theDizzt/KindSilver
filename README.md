@@ -1,3 +1,4 @@
+![Generic badge](https://img.shields.io/badge/version-Nightly_91-green.svg)
 ![ex_말잘듣는 은비](./preview/pre1.png)
 ![ex_말잘듣는 은비](./preview/pre2.png)
 

@@ -1,5 +1,5 @@
-![Generic badge](https://img.shields.io/badge/Version-Nightly_91-green.svg)
-![Generic badge](https://img.shields.io/badge/Released-04.05.2021-brightgreen.svg)
+![Generic badge](https://img.shields.io/badge/Version-Nightly_94-green.svg)
+![Generic badge](https://img.shields.io/badge/Released-04.07.2021-brightgreen.svg)
 
 
 ![ex_말잘듣는 은비](./preview/pre1.png)
